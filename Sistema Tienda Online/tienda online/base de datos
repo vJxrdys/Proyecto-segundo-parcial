@@ -1,0 +1,344 @@
+-- =====================================================
+-- SCRIPT DE CREACIÓN DE BASE DE DATOS
+-- Sistema de Gestión - Tienda en Línea
+-- Para PostgreSQL / Supabase
+-- =====================================================
+
+-- Eliminar tablas si existen (para recrear)
+DROP TABLE IF EXISTS detalle_pedido CASCADE;
+DROP TABLE IF EXISTS pedido CASCADE;
+DROP TABLE IF EXISTS producto CASCADE;
+DROP TABLE IF EXISTS categoria CASCADE;
+DROP TABLE IF EXISTS cliente CASCADE;
+DROP TABLE IF EXISTS estado_pedido CASCADE;
+DROP TABLE IF EXISTS metodo_pago CASCADE;
+
+-- =====================================================
+-- TABLA: CATEGORIA
+-- =====================================================
+CREATE TABLE categoria (
+    id_categoria SERIAL PRIMARY KEY,
+    nombre_categoria VARCHAR(100) NOT NULL UNIQUE,
+    descripcion TEXT,
+    activo BOOLEAN DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================
+-- TABLA: CLIENTE
+-- =====================================================
+CREATE TABLE cliente (
+    id_cliente SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    telefono VARCHAR(20),
+    direccion VARCHAR(255),
+    ciudad VARCHAR(100),
+    pais VARCHAR(100),
+    codigo_postal VARCHAR(20),
+    activo BOOLEAN DEFAULT TRUE,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================
+-- TABLA: ESTADO_PEDIDO
+-- =====================================================
+CREATE TABLE estado_pedido (
+    id_estado SERIAL PRIMARY KEY,
+    nombre_estado VARCHAR(50) NOT NULL UNIQUE,
+    descripcion TEXT
+);
+
+-- =====================================================
+-- TABLA: METODO_PAGO
+-- =====================================================
+CREATE TABLE metodo_pago (
+    id_metodo_pago SERIAL PRIMARY KEY,
+    nombre_metodo VARCHAR(100) NOT NULL UNIQUE,
+    descripcion TEXT,
+    activo BOOLEAN DEFAULT TRUE
+);
+
+-- =====================================================
+-- TABLA: PRODUCTO
+-- =====================================================
+CREATE TABLE producto (
+    id_producto SERIAL PRIMARY KEY,
+    id_categoria INTEGER NOT NULL,
+    nombre_producto VARCHAR(200) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10, 2) NOT NULL CHECK (precio >= 0),
+    stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    imagen_url VARCHAR(500),
+    activo BOOLEAN DEFAULT TRUE,
+    fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria) ON DELETE RESTRICT
+);
+
+-- =====================================================
+-- TABLA: PEDIDO
+-- =====================================================
+CREATE TABLE pedido (
+    id_pedido SERIAL PRIMARY KEY,
+    id_cliente INTEGER NOT NULL,
+    id_estado INTEGER NOT NULL DEFAULT 1,
+    id_metodo_pago INTEGER NOT NULL,
+    fecha_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10, 2) NOT NULL DEFAULT 0 CHECK (total >= 0),
+    notas TEXT,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente) ON DELETE RESTRICT,
+    FOREIGN KEY (id_estado) REFERENCES estado_pedido(id_estado) ON DELETE RESTRICT,
+    FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago) ON DELETE RESTRICT
+);
+
+-- =====================================================
+-- TABLA: DETALLE_PEDIDO
+-- =====================================================
+CREATE TABLE detalle_pedido (
+    id_detalle SERIAL PRIMARY KEY,
+    id_pedido INTEGER NOT NULL,
+    id_producto INTEGER NOT NULL,
+    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
+    precio_unitario DECIMAL(10, 2) NOT NULL CHECK (precio_unitario >= 0),
+    subtotal DECIMAL(10, 2) NOT NULL CHECK (subtotal >= 0),
+    FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido) ON DELETE CASCADE,
+    FOREIGN KEY (id_producto) REFERENCES producto(id_producto) ON DELETE RESTRICT
+);
+
+-- =====================================================
+-- ÍNDICES PARA MEJOR RENDIMIENTO
+-- =====================================================
+CREATE INDEX idx_producto_categoria ON producto(id_categoria);
+CREATE INDEX idx_producto_nombre ON producto(nombre_producto);
+CREATE INDEX idx_pedido_cliente ON pedido(id_cliente);
+CREATE INDEX idx_pedido_fecha ON pedido(fecha_pedido);
+CREATE INDEX idx_detalle_pedido ON detalle_pedido(id_pedido);
+CREATE INDEX idx_detalle_producto ON detalle_pedido(id_producto);
+CREATE INDEX idx_cliente_email ON cliente(email);
+
+-- =====================================================
+-- DATOS INICIALES: CATEGORÍAS
+-- =====================================================
+INSERT INTO categoria (nombre_categoria, descripcion) VALUES
+('Electrónica', 'Dispositivos electrónicos y accesorios'),
+('Ropa', 'Prendas de vestir y accesorios de moda'),
+('Hogar', 'Artículos para el hogar y decoración'),
+('Deportes', 'Equipamiento y ropa deportiva'),
+('Libros', 'Libros físicos y digitales'),
+('Juguetes', 'Juguetes y juegos para niños');
+
+-- =====================================================
+-- DATOS INICIALES: ESTADOS DE PEDIDO
+-- =====================================================
+INSERT INTO estado_pedido (nombre_estado, descripcion) VALUES
+('Pendiente', 'Pedido registrado, pendiente de procesamiento'),
+('Procesando', 'Pedido en proceso de preparación'),
+('Enviado', 'Pedido enviado al cliente'),
+('Entregado', 'Pedido entregado exitosamente'),
+('Cancelado', 'Pedido cancelado');
+
+-- =====================================================
+-- DATOS INICIALES: MÉTODOS DE PAGO
+-- =====================================================
+INSERT INTO metodo_pago (nombre_metodo, descripcion) VALUES
+('Tarjeta de Crédito', 'Pago con tarjeta de crédito'),
+('Tarjeta de Débito', 'Pago con tarjeta de débito'),
+('PayPal', 'Pago a través de PayPal'),
+('Transferencia Bancaria', 'Pago por transferencia bancaria'),
+('Contra Entrega', 'Pago en efectivo al recibir el pedido');
+
+-- =====================================================
+-- DATOS DE EJEMPLO: CLIENTES
+-- =====================================================
+INSERT INTO cliente (nombre, apellido, email, telefono, direccion, ciudad, pais, codigo_postal) VALUES
+('Juan', 'Pérez', 'juan.perez@email.com', '0991234567', 'Av. 9 de Octubre 123', 'Guayaquil', 'Ecuador', '090101'),
+('María', 'González', 'maria.gonzalez@email.com', '0987654321', 'Calle Amazonas 456', 'Quito', 'Ecuador', '170101'),
+('Carlos', 'Rodríguez', 'carlos.rodriguez@email.com', '0998765432', 'Av. Víctor Emilio Estrada 789', 'Guayaquil', 'Ecuador', '090102'),
+('Ana', 'Martínez', 'ana.martinez@email.com', '0993456789', 'Calle Colon 321', 'Cuenca', 'Ecuador', '010101'),
+('Luis', 'López', 'luis.lopez@email.com', '0996543210', 'Av. Las Américas 654', 'Quito', 'Ecuador', '170102');
+
+-- =====================================================
+-- DATOS DE EJEMPLO: PRODUCTOS
+-- =====================================================
+INSERT INTO producto (id_categoria, nombre_producto, descripcion, precio, stock, imagen_url) VALUES
+-- Electrónica
+(1, 'Laptop HP 15.6"', 'Laptop HP Intel Core i5, 8GB RAM, 256GB SSD', 899.99, 15, 'https://picsum.photos/200/200?random=1'),
+(1, 'Mouse Logitech Inalámbrico', 'Mouse óptico inalámbrico con receptor USB', 25.50, 50, 'https://picsum.photos/200/200?random=2'),
+(1, 'Teclado Mecánico RGB', 'Teclado mecánico gaming con iluminación RGB', 89.99, 30, 'https://picsum.photos/200/200?random=3'),
+(1, 'Audífonos Sony WH-1000XM4', 'Audífonos inalámbricos con cancelación de ruido', 349.99, 20, 'https://picsum.photos/200/200?random=4'),
+(1, 'Monitor LG 24" Full HD', 'Monitor LED 24 pulgadas, 1920x1080, 75Hz', 189.99, 25, 'https://picsum.photos/200/200?random=5'),
+(1, 'Webcam Logitech C920', 'Webcam Full HD 1080p con micrófono estéreo', 79.99, 40, 'https://picsum.photos/200/200?random=6'),
+
+-- Ropa
+(2, 'Camiseta Polo Lacoste', 'Camiseta polo 100% algodón, tallas S-XL', 45.00, 100, 'https://picsum.photos/200/200?random=7'),
+(2, 'Jeans Levis 501', 'Jeans clásicos de mezclilla azul', 79.99, 60, 'https://picsum.photos/200/200?random=8'),
+(2, 'Zapatillas Nike Air Max', 'Zapatillas deportivas para running', 120.00, 45, 'https://picsum.photos/200/200?random=9'),
+(2, 'Chaqueta North Face', 'Chaqueta impermeable para montaña', 199.99, 30, 'https://picsum.photos/200/200?random=10'),
+
+-- Hogar
+(3, 'Cafetera Nespresso', 'Cafetera de cápsulas automática', 199.99, 18, 'https://picsum.photos/200/200?random=11'),
+(3, 'Aspiradora Roomba i7', 'Robot aspiradora inteligente con mapeo', 399.99, 12, 'https://picsum.photos/200/200?random=12'),
+(3, 'Licuadora Oster 600W', 'Licuadora con vaso de vidrio 1.5L', 59.99, 35, 'https://picsum.photos/200/200?random=13'),
+(3, 'Juego de Sartenes Tefal', 'Set de 3 sartenes antiadherentes', 89.99, 28, 'https://picsum.photos/200/200?random=14'),
+
+-- Deportes
+(4, 'Bicicleta de Montaña Giant', 'Bicicleta MTB aro 29, 21 velocidades', 450.00, 10, 'https://picsum.photos/200/200?random=15'),
+(4, 'Balón de Fútbol Adidas', 'Balón oficial tamaño 5', 29.99, 80, 'https://picsum.photos/200/200?random=16'),
+(4, 'Pesas Ajustables 20kg', 'Set de pesas ajustables con soporte', 120.00, 22, 'https://picsum.photos/200/200?random=17'),
+(4, 'Cuerda para Saltar', 'Cuerda de velocidad para crossfit', 15.99, 100, 'https://picsum.photos/200/200?random=18'),
+
+-- Libros
+(5, 'Cien Años de Soledad', 'Gabriel García Márquez - Tapa dura', 24.99, 50, 'https://picsum.photos/200/200?random=19'),
+(5, 'El Principito', 'Antoine de Saint-Exupéry - Edición ilustrada', 18.99, 75, 'https://picsum.photos/200/200?random=20'),
+(5, '1984', 'George Orwell - Clásico distópico', 19.99, 40, 'https://picsum.photos/200/200?random=21'),
+
+-- Juguetes
+(6, 'LEGO Star Wars', 'Set de construcción 500 piezas', 79.99, 35, 'https://picsum.photos/200/200?random=22'),
+(6, 'Muñeca Barbie Dreamhouse', 'Casa de ensueño con accesorios', 149.99, 20, 'https://picsum.photos/200/200?random=23'),
+(6, 'Hot Wheels Pista Mega', 'Pista de carreras con loop', 59.99, 28, 'https://picsum.photos/200/200?random=24');
+
+-- =====================================================
+-- DATOS DE EJEMPLO: PEDIDOS
+-- =====================================================
+INSERT INTO pedido (id_cliente, id_estado, id_metodo_pago, total, notas) VALUES
+(1, 3, 1, 925.49, 'Entregar en horario de oficina'),
+(2, 4, 3, 215.00, NULL),
+(3, 2, 2, 89.99, 'Llamar antes de entregar'),
+(1, 1, 1, 450.00, NULL),
+(4, 3, 4, 149.99, 'Dejar con portero');
+
+-- =====================================================
+-- DATOS DE EJEMPLO: DETALLES DE PEDIDOS
+-- =====================================================
+INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario, subtotal) VALUES
+-- Pedido 1
+(1, 1, 1, 899.99, 899.99),
+(1, 2, 1, 25.50, 25.50),
+
+-- Pedido 2
+(2, 7, 2, 45.00, 90.00),
+(2, 16, 1, 29.99, 29.99),
+(2, 18, 3, 15.99, 47.97),
+(2, 20, 1, 18.99, 18.99),
+
+-- Pedido 3
+(3, 3, 1, 89.99, 89.99),
+
+-- Pedido 4
+(4, 15, 1, 450.00, 450.00),
+
+-- Pedido 5
+(5, 23, 1, 149.99, 149.99);
+
+-- =====================================================
+-- FUNCIÓN: Actualizar stock después de insertar detalle
+-- =====================================================
+CREATE OR REPLACE FUNCTION actualizar_stock_pedido()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Reducir stock
+    UPDATE producto 
+    SET stock = stock - NEW.cantidad 
+    WHERE id_producto = NEW.id_producto;
+    
+    -- Actualizar total del pedido
+    UPDATE pedido 
+    SET total = (
+        SELECT COALESCE(SUM(subtotal), 0) 
+        FROM detalle_pedido 
+        WHERE id_pedido = NEW.id_pedido
+    )
+    WHERE id_pedido = NEW.id_pedido;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- TRIGGER: Actualizar automáticamente al insertar detalle
+-- =====================================================
+CREATE TRIGGER trigger_actualizar_stock
+AFTER INSERT ON detalle_pedido
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_stock_pedido();
+
+-- =====================================================
+-- FUNCIÓN: Restaurar stock al eliminar detalle
+-- =====================================================
+CREATE OR REPLACE FUNCTION restaurar_stock_pedido()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Restaurar stock
+    UPDATE producto 
+    SET stock = stock + OLD.cantidad 
+    WHERE id_producto = OLD.id_producto;
+    
+    -- Actualizar total del pedido
+    UPDATE pedido 
+    SET total = (
+        SELECT COALESCE(SUM(subtotal), 0) 
+        FROM detalle_pedido 
+        WHERE id_pedido = OLD.id_pedido
+    )
+    WHERE id_pedido = OLD.id_pedido;
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- TRIGGER: Restaurar stock al eliminar detalle
+-- =====================================================
+CREATE TRIGGER trigger_restaurar_stock
+AFTER DELETE ON detalle_pedido
+FOR EACH ROW
+EXECUTE FUNCTION restaurar_stock_pedido();
+
+-- =====================================================
+-- VISTAS ÚTILES
+-- =====================================================
+
+-- Vista: Productos con categoría y stock
+CREATE VIEW vista_productos_completo AS
+SELECT 
+    p.id_producto,
+    p.nombre_producto,
+    p.descripcion,
+    p.precio,
+    p.stock,
+    c.nombre_categoria,
+    p.imagen_url,
+    p.activo,
+    p.fecha_agregado
+FROM producto p
+INNER JOIN categoria c ON p.id_categoria = c.id_categoria;
+
+-- Vista: Pedidos completos con cliente
+CREATE VIEW vista_pedidos_completo AS
+SELECT 
+    ped.id_pedido,
+    ped.fecha_pedido,
+    CONCAT(cli.nombre, ' ', cli.apellido) AS cliente,
+    cli.email,
+    cli.telefono,
+    est.nombre_estado,
+    mp.nombre_metodo,
+    ped.total,
+    ped.notas
+FROM pedido ped
+INNER JOIN cliente cli ON ped.id_cliente = cli.id_cliente
+INNER JOIN estado_pedido est ON ped.id_estado = est.id_estado
+INNER JOIN metodo_pago mp ON ped.id_metodo_pago = mp.id_metodo_pago;
+
+-- =====================================================
+-- FIN DEL SCRIPT
+-- =====================================================
+
+-- Verificación de datos insertados
+SELECT 'Categorías creadas: ' || COUNT(*) FROM categoria;
+SELECT 'Clientes creados: ' || COUNT(*) FROM cliente;
+SELECT 'Productos creados: ' || COUNT(*) FROM producto;
+SELECT 'Pedidos creados: ' || COUNT(*) FROM pedido;
+SELECT 'Estados de pedido: ' || COUNT(*) FROM estado_pedido;
+SELECT 'Métodos de pago: ' || COUNT(*) FROM metodo_pago;
