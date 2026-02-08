@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda en Línea - Sistema de Gestión</title>
+    <link rel="stylesheet" href="styles_dark.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sistema de Gestión - Tienda en Línea</h1>
+            <p>Panel de Administración</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="dashboard">Dashboard</button>
+            <button class="tab" data-tab="clientes">Clientes</button>
+            <button class="tab" data-tab="productos">Productos</button>
+            <button class="tab" data-tab="pedidos">Pedidos</button>
+            <button class="tab" data-tab="consultas">Consultas SQL</button>
+            <button class="tab" data-tab="ayuda">Ayuda</button>
+        </div>
+
+        <div class="content">
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="tab-content active">
+                <h2>Panel de Control</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>150</h3>
+                        <p>Total Clientes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>24</h3>
+                        <p>Productos</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>87</h3>
+                        <p>Pedidos Totales</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>$12,450</h3>
+                        <p>Ventas Totales</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Bienvenido al Sistema de Gestión</strong><br>
+                    Este sistema permite administrar clientes, productos y pedidos de la tienda en línea.
+                    Utilice las pestañas superiores para navegar entre las diferentes secciones.
+                </div>
+
+                <div class="form-section">
+                    <h3>Acciones Rápidas</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" data-goto="clientes">Agregar Cliente</button>
+                        <button class="btn btn-success" data-goto="productos">Agregar Producto</button>
+                        <button class="btn btn-warning" data-goto="pedidos">Nuevo Pedido</button>
+                        <button class="btn btn-primary" data-goto="consultas">Ver Reportes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLIENTES -->
+            <div id="clientes" class="tab-content">
+                <h2>Gestión de Clientes</h2>
+
+                <div class="form-section">
+                    <h3>Agregar Nuevo Cliente</h3>
+                    <form id="formCliente">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" id="nombreCliente" required placeholder="Juan">
+                            </div>
+                            <div class="form-group">
+                                <label>Apellido</label>
+                                <input type="text" id="apellidoCliente" required placeholder="Pérez">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="emailCliente" required placeholder="ejemplo@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                <input type="tel" id="telefonoCliente" placeholder="0991234567">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" id="direccionCliente" placeholder="Calle Principal 123">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Ciudad</label>
+                                <input type="text" id="ciudadCliente" placeholder="Guayaquil">
+                            </div>
+                            <div class="form-group">
+                                <label>País</label>
+                                <input type="text" id="paisCliente" value="Ecuador">
+                            </div>
+                            <div class="form-group">
+                                <label>Código Postal</label>
+                                <input type="text" id="codigoPostalCliente" placeholder="090101">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+                        <button type="button" class="btn btn-warning" data-action="ver-sql-cliente">Ver SQL</button>
+                    </form>
+                </div>
+
+                <div id="sqlCliente" class="query-result" style="display:none;">
+                    <h4>Consulta SQL Generada</h4>
+                    <div class="code-block" id="codigoSQLCliente"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Listado de Clientes</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Ciudad</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Juan Pérez</td>
+                                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c2ddc9c686d8cddacdd2e8cdc5c9c1c486cbc7c5">[email&#160;protected]</a></td>
+                                    <td>0991234567</td>
+                                    <td>Guayaquil</td>
+                                    <td>
+                                        <button class="btn btn-warning" style="padding: 5px 15px; margin: 0 5px 0 0;">Editar</button>
+                                        <button class="btn btn-danger" style="padding: 5px 15px; margin: 0;">Eliminar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>María González</td>
+                                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aac7cbd8c3cb84cdc5c4d0cbc6cfd0eacfc7cbc3c684c9c5c7">[email&#160;protected]</a></td>
+                                    <td>0987654321</td>
+                                    <td>Quito</td>
+                                    <td>
+                                        <button class="btn btn-warning" style="padding: 5px 15px; margin: 0 5px 0 0;">Editar</button>
+                                        <button class="btn btn-danger" style="padding: 5px 15px; margin: 0;">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCTOS -->
+            <div id="productos" class="tab-content">
+                <h2>Gestión de Productos</h2>
+
+                <div class="form-section">
+                    <h3>Agregar Nuevo Producto</h3>
+                    <form id="formProducto">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nombre del Producto</label>
+                                <input type="text" id="nombreProducto" required placeholder="Laptop HP 15.6">
+                            </div>
+                            <div class="form-group">
+                                <label>Categoría</label>
+                                <select id="categoriaProducto" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="1">Electrónica</option>
+                                    <option value="2">Ropa</option>
+                                    <option value="3">Hogar</option>
+                                    <option value="4">Deportes</option>
+                                    <option value="5">Libros</option>
+                                    <option value="6">Juguetes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea id="descripcionProducto" rows="3" placeholder="Descripción detallada del producto"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Precio (USD)</label>
+                                <input type="number" id="precioProducto" step="0.01" required placeholder="99.99">
+                            </div>
+                            <div class="form-group">
+                                <label>Stock</label>
+                                <input type="number" id="stockProducto" required placeholder="50">
+                            </div>
+                            <div class="form-group">
+                                <label>URL de Imagen</label>
+                                <input type="url" id="imagenProducto" placeholder="https://ejemplo.com/imagen.jpg">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Guardar Producto</button>
+                        <button type="button" class="btn btn-warning" data-action="ver-sql-producto">Ver SQL</button>
+                    </form>
+                </div>
+
+                <div id="sqlProducto" class="query-result" style="display:none;">
+                    <h4>Consulta SQL Generada</h4>
+                    <div class="code-block" id="codigoSQLProducto"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Catálogo de Productos</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Laptop HP 15.6"</td>
+                                    <td>Electrónica</td>
+                                    <td>$899.99</td>
+                                    <td>15</td>
+                                    <td>
+                                        <button class="btn btn-warning" style="padding: 5px 15px; margin: 0 5px 0 0;">Editar</button>
+                                        <button class="btn btn-danger" style="padding: 5px 15px; margin: 0;">Eliminar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Mouse Inalámbrico</td>
+                                    <td>Electrónica</td>
+                                    <td>$25.50</td>
+                                    <td>50</td>
+                                    <td>
+                                        <button class="btn btn-warning" style="padding: 5px 15px; margin: 0 5px 0 0;">Editar</button>
+                                        <button class="btn btn-danger" style="padding: 5px 15px; margin: 0;">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PEDIDOS -->
+            <div id="pedidos" class="tab-content">
+                <h2>Gestión de Pedidos</h2>
+
+                <div class="form-section">
+                    <h3>Crear Nuevo Pedido</h3>
+                    <form id="formPedido">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Cliente</label>
+                                <select id="clientePedido" required>
+                                    <option value="">Seleccione un cliente...</option>
+                                    <option value="1">Juan Pérez</option>
+                                    <option value="2">María González</option>
+                                    <option value="3">Carlos Rodríguez</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Método de Pago</label>
+                                <select id="metodoPago" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="1">Tarjeta de Crédito</option>
+                                    <option value="2">Tarjeta de Débito</option>
+                                    <option value="3">PayPal</option>
+                                    <option value="4">Transferencia Bancaria</option>
+                                    <option value="5">Contra Entrega</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Notas del Pedido</label>
+                            <textarea id="notasPedido" rows="3" placeholder="Instrucciones especiales de entrega..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Crear Pedido</button>
+                        <button type="button" class="btn btn-warning" data-action="ver-sql-pedido">Ver SQL</button>
+                    </form>
+                </div>
+
+                <div id="sqlPedido" class="query-result" style="display:none;">
+                    <h4>Consulta SQL Generada</h4>
+                    <div class="code-block" id="codigoSQLPedido"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Listado de Pedidos</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Método Pago</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Juan Pérez</td>
+                                    <td>2026-02-01</td>
+                                    <td>$925.49</td>
+                                    <td><span class="status-badge status-enviado">Enviado</span></td>
+                                    <td>Tarjeta de Crédito</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 15px; margin: 0;">Ver</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>María González</td>
+                                    <td>2026-02-02</td>
+                                    <td>$215.00</td>
+                                    <td><span class="status-badge status-entregado">Entregado</span></td>
+                                    <td>PayPal</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 15px; margin: 0;">Ver</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>2026-02-03</td>
+                                    <td>$89.99</td>
+                                    <td><span class="status-badge status-procesando">Procesando</span></td>
+                                    <td>Tarjeta de Débito</td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 5px 15px; margin: 0;">Ver</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONSULTAS SQL -->
+            <div id="consultas" class="tab-content">
+                <h2>Consultas SQL Complejas</h2>
+
+                <div class="form-section">
+                    <h3>Consultas Predefinidas</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" data-consulta="productos-categoria">Productos por Categoría</button>
+                        <button class="btn btn-primary" data-consulta="ventas-categoria">Ventas por Categoría</button>
+                        <button class="btn btn-primary" data-consulta="clientes-pedidos">Clientes con Pedidos</button>
+                        <button class="btn btn-primary" data-consulta="productos-vendidos">Productos Más Vendidos</button>
+                        <button class="btn btn-primary" data-consulta="stock-bajo">Stock Bajo</button>
+                        <button class="btn btn-primary" data-consulta="pedidos-pendientes">Pedidos Pendientes</button>
+                    </div>
+                </div>
+
+                <div id="resultadoConsulta" class="query-result" style="display:none;">
+                    <h4>Consulta SQL</h4>
+                    <div class="code-block" id="codigoConsulta"></div>
+                    <h4 style="margin-top: 20px;">Resultado de Ejemplo</h4>
+                    <div id="tablaResultado"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Editor SQL Personalizado</h3>
+                    <div class="form-group">
+                        <label>Escribe tu consulta SQL</label>
+                        <textarea id="sqlPersonalizado" rows="6" placeholder="SELECT * FROM CLIENTE WHERE ciudad = 'Guayaquil';"></textarea>
+                    </div>
+                    <button class="btn btn-success" data-action="ejecutar-sql">Ejecutar Consulta</button>
+                </div>
+            </div>
+
+            <!-- AYUDA -->
+            <div id="ayuda" class="tab-content">
+                <h2>Documentación y Ayuda</h2>
+
+                <div class="form-section">
+                    <h3>Estructura de la Base de Datos</h3>
+                    <p>
+                        La base de datos está compuesta por 7 tablas principales que están relacionadas entre sí:
+                    </p>
+                    <ul>
+                        <li><strong>CLIENTE:</strong> Información de los clientes registrados</li>
+                        <li><strong>CATEGORIA:</strong> Categorías de productos</li>
+                        <li><strong>PRODUCTO:</strong> Catálogo de productos disponibles</li>
+                        <li><strong>ESTADO_PEDIDO:</strong> Estados posibles de un pedido</li>
+                        <li><strong>METODO_PAGO:</strong> Métodos de pago disponibles</li>
+                        <li><strong>PEDIDO:</strong> Pedidos realizados por clientes</li>
+                        <li><strong>DETALLE_PEDIDO:</strong> Productos incluidos en cada pedido</li>
+                    </ul>
+                </div>
+
+                <div class="form-section">
+                    <h3>Relaciones entre Tablas</h3>
+                    <ul>
+                        <li>Un CLIENTE puede realizar múltiples PEDIDOS (1:N)</li>
+                        <li>Un PEDIDO pertenece a un solo CLIENTE (N:1)</li>
+                        <li>Un PEDIDO puede contener múltiples PRODUCTOS a través de DETALLE_PEDIDO (N:M)</li>
+                        <li>Un PRODUCTO puede estar en múltiples PEDIDOS (N:M)</li>
+                        <li>Un PRODUCTO pertenece a una CATEGORIA (N:1)</li>
+                        <li>Una CATEGORIA puede tener múltiples PRODUCTOS (1:N)</li>
+                    </ul>
+                </div>
+
+                <div class="form-section">
+                    <h3>Normalización</h3>
+                    <p>
+                        La base de datos está normalizada hasta la Tercera Forma Normal (3NF):
+                    </p>
+                    <ul>
+                        <li><strong>1FN:</strong> Todos los atributos son atómicos</li>
+                        <li><strong>2FN:</strong> No hay dependencias parciales</li>
+                        <li><strong>3FN:</strong> No hay dependencias transitivas</li>
+                    </ul>
+                </div>
+
+                <div class="form-section">
+                    <h3>Operaciones CRUD</h3>
+                    <div class="code-block">
+-- CREATE (Insertar)
+INSERT INTO CLIENTE (nombre, apellido, email) 
+VALUES ('Juan', 'Pérez', '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b3acb8b799bcb4b8b0b5f7bab6b4">[email&#160;protected]</a>');
+
+-- READ (Leer)
+SELECT * FROM CLIENTE WHERE ciudad = 'Guayaquil';
+
+-- UPDATE (Actualizar)
+UPDATE PRODUCTO SET precio = 899.99 WHERE id_producto = 1;
+
+-- DELETE (Eliminar)
+DELETE FROM CLIENTE WHERE id_cliente = 10;
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Ejemplos de Consultas Complejas</h3>
+                    <div class="code-block">
+-- Pedidos con información del cliente
+SELECT 
+    ped.id_pedido,
+    CONCAT(cli.nombre, ' ', cli.apellido) AS cliente,
+    ped.fecha_pedido,
+    ped.total,
+    est.nombre_estado
+FROM PEDIDO ped
+INNER JOIN CLIENTE cli ON ped.id_cliente = cli.id_cliente
+INNER JOIN ESTADO_PEDIDO est ON ped.id_estado = est.id_estado
+ORDER BY ped.fecha_pedido DESC;
+
+-- Productos más vendidos
+SELECT 
+    p.nombre_producto,
+    SUM(det.cantidad) AS total_vendido,
+    SUM(det.subtotal) AS ingresos_totales
+FROM PRODUCTO p
+INNER JOIN DETALLE_PEDIDO det ON p.id_producto = det.id_producto
+GROUP BY p.id_producto, p.nombre_producto
+ORDER BY total_vendido DESC
+LIMIT 10;
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Nota:</strong> Esta interfaz es una demostración del sistema. Para una implementación real,
+                    se requiere conectar con una base de datos MySQL/PostgreSQL mediante un backend (PHP, Node.js, Python, etc.).
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script_api.js"></script>
+</body>
+</html>

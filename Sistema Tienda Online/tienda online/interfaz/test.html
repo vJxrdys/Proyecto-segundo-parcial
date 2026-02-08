@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Tienda en Línea</title>
+    <link rel="stylesheet" href="styles_dark.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sistema de Gestión - Tienda en Línea</h1>
+            <p>Versión de Prueba - Verificando Botones</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="dashboard">Dashboard</button>
+            <button class="tab" data-tab="clientes">Clientes</button>
+            <button class="tab" data-tab="productos">Productos</button>
+        </div>
+
+        <div class="content">
+            <div id="dashboard" class="tab-content active">
+                <h2>Panel de Control</h2>
+                <div class="alert alert-info">
+                    <strong>Test de Funcionalidad</strong><br>
+                    Si los botones funcionan, podrás cambiar entre las pestañas.
+                </div>
+                <button class="btn btn-primary" data-goto="clientes">Ir a Clientes</button>
+            </div>
+
+            <div id="clientes" class="tab-content">
+                <h2>Gestión de Clientes</h2>
+                <div class="alert alert-success">
+                    <strong>¡Funciona!</strong><br>
+                    Los botones están operativos.
+                </div>
+            </div>
+
+            <div id="productos" class="tab-content">
+                <h2>Gestión de Productos</h2>
+                <div class="alert alert-success">
+                    <strong>¡Excelente!</strong><br>
+                    La navegación funciona correctamente.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('Iniciando prueba de botones...');
+
+        // Navegación de tabs
+        function showTab(tabName) {
+            console.log('Cambiando a tab:', tabName);
+            
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const targetContent = document.getElementById(tabName);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                console.log('Tab activado:', tabName);
+            } else {
+                console.error('No se encontró el tab:', tabName);
+            }
+            
+            const targetButton = document.querySelector(`[data-tab="${tabName}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+        }
+
+        // Inicializar tabs
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('.tab');
+            console.log('Botones encontrados:', tabButtons.length);
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    console.log('Click en botón:', tabName);
+                    showTab(tabName);
+                });
+            });
+        }
+
+        // Inicializar botones goto
+        function initGotoButtons() {
+            const gotoButtons = document.querySelectorAll('[data-goto]');
+            console.log('Botones goto encontrados:', gotoButtons.length);
+            
+            gotoButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-goto');
+                    console.log('Goto click:', tabName);
+                    showTab(tabName);
+                });
+            });
+        }
+
+        // Inicializar todo cuando cargue la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Cargado - Inicializando...');
+            initTabs();
+            initGotoButtons();
+            console.log('Inicialización completa');
+        });
+    </script>
+</body>
+</html>
